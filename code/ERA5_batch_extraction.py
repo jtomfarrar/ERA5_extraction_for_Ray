@@ -33,8 +33,10 @@ import Tom_tools_v1 as tt
 var=['specific_humidity', 'u_component_of_wind', 'v_component_of_wind']
 #yrs=['2016', '2017']
 #mons= ['01', '02', '03','04', '05', '06','07', '08', '09','10', '11', '12']
-yrs=['2016']
-mons= ['09', '10', '11', '12']
+#yrs=['2016']
+#mons= ['09', '10', '11', '12']
+yrs=['2017']
+mons= ['01', '02', '03','04', '05', '06','07', '08', '09','10', '11', '12']
 
 # 'specific_cloud_liquid_water_content', 'u_component_of_wind', 'v_component_of_wind', 'vertical_velocity'
 

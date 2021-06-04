@@ -30,21 +30,17 @@ import sys
 #yr = '2011'
 
 
-def get_surface_vars(lon0,lat0,dlon,dlat,yr,region_name=None):
+def get_vars_for_Ray(var,yr,mon):
     '''
-    Extract ERA5 surface data using Copernicus Climate Data System API.  
-    Given a geographic region and a year, saves file 'ERA5_{lon0}E_{lat0}N_{yr}.nc' in local directory
+    Extract ERA5 pressure-level data using Copernicus Climate Data System API.  
+    Saves file 'ERA5_{lon0}E_{lat0}N_{yr}.nc' in local directory
 
     Parameters
     ----------
-    lon0 : numeric
-        Target longitude.
-    lat0 : numeric
-        Target latitude.
-    dlon : numeric
-        +/- latitude range around lon0.
-    dlat : numeric
-        +/- latitude range around lat0.
+    var : str
+        Variable to extract.
+    yr : str
+        Year to extract.
     yr : str
         Year to extract.
     region_name (optional) : str 
@@ -57,47 +53,57 @@ def get_surface_vars(lon0,lat0,dlon,dlat,yr,region_name=None):
     'ERA5_{lon0}E_{lat0}N_{yr}.nc'
 
     '''
-    if region_name is None:
-        region_name='ERA5_'+str(round(lon0))+'E_'+str(round(lat0))+'N'
-
-    output_file_prefix = 'ERA5_surface_' + region_name
-    output_file = output_file_prefix + '_' + yr +'.nc'
-
+    path = '../data/raw/'
+    outputfile = 'SPURS2_ERA5_Ray_' + var + '_' + yr + '_' + mon + '.nc'
+    
     c = cdsapi.Client()
     c.retrieve(
-        'reanalysis-era5-single-levels', # DOI: 10.24381/cds.adbb2d47
+        'reanalysis-era5-pressure-levels',
         {
             'product_type': 'reanalysis',
-            'variable': [
-                '10m_u_component_of_wind', '10m_v_component_of_wind', '2m_dewpoint_temperature',
-                '2m_temperature', 'mean_sea_level_pressure', 'mean_wave_direction',
-                'mean_wave_period', 'sea_surface_temperature', 'significant_height_of_combined_wind_waves_and_swell',
-                'surface_pressure', 'total_precipitation',
-            ],
-            'year': yr,
-            'month': [
-                '01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12',
-            ],
-            'day': [
-                '01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12', '13', '14', '15', '16', '17', '18', 
-                '19', '20', '21', '22', '23', '24', '25', '26', '27', '28', '29', '30', '31',
-            ],
-            'time': [
-                '00:00', '01:00', '02:00', '03:00', '04:00', '05:00', '06:00', '07:00', '08:00', '09:00', '10:00', '11:00',
-                '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00', '21:00', '22:00', '23:00',
-            ],
-            # area is N, W, S, E; valid range is 90, -180, -90, 180
-            'area': [
-                lat0+dlat, lon0-dlon, lat0-dlat,
-                lon0+dlon,
-            ],
             'format': 'netcdf',
+            'variable': [var],
+            'pressure_level': [
+                '1', '2', '3', '5', '7', '10',
+                '20', '30', '50', '70', '100', '125',
+                '150', '175', '200', '225', '250', '300',
+                '350', '400', '450', '500', '550', '600',
+                '650', '700', '750', '775', '800', '825',
+                '850', '875', '900', '925', '950', '975',
+                '1000'],
+            'year': [yr],
+            'time': [
+                '00:00', '01:00', '02:00', '03:00', '04:00', '05:00',
+                '06:00', '07:00', '08:00', '09:00', '10:00', '11:00',
+                '12:00', '13:00', '14:00', '15:00', '16:00', '17:00',
+                '18:00', '19:00', '20:00', '21:00', '22:00', '23:00',
+            ],
+            'area': [
+                12, -127, 8,
+                -123,
+            ],# Lat: 8.5 - 11.5 N Lon: 126.5 - 123.5 W
+
+        'month': [mon],
+        'day': [
+            '01', '02', '03',
+            '04', '05', '06',
+            '07', '08', '09',
+            '10', '11', '12',
+            '13', '14', '15',
+            '16', '17', '18',
+            '19', '20', '21',
+            '22', '23', '24',
+            '25', '26', '27',
+            '28', '29', '30',
+            '31',
+        ],
         },
-        output_file)
+        path+outputfile)
+
     
     # Write a readme file to say when and by what script the file was written
     calling_fname = str(sys.argv[0])
-    ReadmeFile = open("readme_"+output_file_prefix+".txt", "w")
+    ReadmeFile = open("readme_"+outputfile.replace('.nc', '')+".txt", "w")
     ReadmeFile.write ('Written using ERA5_extraction_tool.get_surface_vars() on \n' + str(datetime.datetime.now()) + 
                       '\n Invoked from ' + calling_fname) 
     ReadmeFile.close()

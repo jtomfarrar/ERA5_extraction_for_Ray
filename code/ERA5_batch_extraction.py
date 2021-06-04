@@ -11,7 +11,6 @@ Lon: 126.5 - 123.5 W
 Modified from:
 C:/Users/jtomf/Documents/Python/WHOTS_WG_proposal/ERA5_batch_extraction.py
 C:/Users/jtomf/Documents/Python/WHOTS_WG_proposal/ERA5_extraction_tool.py
-Also will need to refer to and modify:
 C:/Users/jtomf/Documents/Python/ERA5_plots/read_ERA5_SPURS2_Copernicus_CDS_API.py
 
 
@@ -35,7 +34,7 @@ var=['specific_humidity', 'u_component_of_wind', 'v_component_of_wind']
 #yrs=['2016', '2017']
 #mons= ['01', '02', '03','04', '05', '06','07', '08', '09','10', '11', '12']
 yrs=['2016']
-mons= ['09','10', '11', '12']
+mons= ['09', '10', '11', '12']
 
 # 'specific_cloud_liquid_water_content', 'u_component_of_wind', 'v_component_of_wind', 'vertical_velocity'
 
